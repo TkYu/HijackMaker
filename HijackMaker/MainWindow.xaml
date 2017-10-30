@@ -1,0 +1,58 @@
+﻿<Window x:Class="HijackMaker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HijackMaker" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" FontFamily="Microsoft YaHei UI,微软雅黑" FontSize="12"
+        Title="HijackMaker" Height="500" Width="813">
+    <Window.DataContext>
+        <local:MainWindowVM/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="7*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListBox Name="lstWinDlls" Height="Auto" Margin="3" ItemsSource="{Binding ListedDlls,Mode=OneWay}" HorizontalContentAlignment="Stretch" SelectedValuePath="Value" SelectedValue="{Binding SelectedDll}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick"
+                                              Command="{Binding DataContext.CmdAdd, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                              CommandParameter="{Binding}" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBox Grid.Row="1" Margin="3" Text="{Binding SearchText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"></ColumnDefinition>
+                <ColumnDefinition Width="6.5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ListBox Height="Auto" Margin="3" ItemsSource="{Binding SelectedDlls,Mode=OneWay}" HorizontalContentAlignment="Stretch" SelectedValuePath="Value">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick"
+                                              Command="{Binding DataContext.CmdRemove, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                              CommandParameter="{Binding}" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBox Grid.Column="1" Margin="3" Text="{Binding TextResult}" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+    </Grid>
+</Window>
