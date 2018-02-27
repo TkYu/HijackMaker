@@ -112,7 +112,10 @@ namespace HijackMaker
 			var exports = new Symbol(SelectedDlls).Exports;
 			var fileNames = SelectedDlls.Select(Path.GetFileNameWithoutExtension).ToArray();
 
-			TextResult = $@"#define EXTERNC extern ""C""
+			TextResult = $@"#include <windows.h>
+#include <intrin.h>
+
+#define EXTERNC extern ""C""
 
 #define FUNCTION EXTERNC void __cdecl
 
@@ -148,7 +151,7 @@ namespace HijackMaker
 {string.Join("\n", exports.Select(c => $"#pragma PRAGMA({c})"))}
 
 {string.Join("\n", exports.Select(c => $"EXPORT({c})"))}
-#pragma endregion 
+#pragma endregion
 
 #pragma region 还原导出函数
 bool WriteMemory(PBYTE BaseAddress, PBYTE Buffer, DWORD nSize)
@@ -163,6 +166,14 @@ bool WriteMemory(PBYTE BaseAddress, PBYTE Buffer, DWORD nSize)
 	}}
 	return false;
 }}
+
+// 定义MWORD为机器字长
+#include <stdint.h>
+#ifdef _WIN64
+typedef uint64_t MWORD;
+#else
+typedef uint32_t MWORD;
+#endif
 
 // 还原导出函数
 void InstallJMP(PBYTE BaseAddress, MWORD Function)
