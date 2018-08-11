@@ -213,6 +213,7 @@ void InstallJMP(PBYTE BaseAddress, MWORD Function)
 			PIMAGE_EXPORT_DIRECTORY pimExD = (PIMAGE_EXPORT_DIRECTORY)(pImageBase + pimNH->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 			DWORD*  pName = (DWORD*)(pImageBase + pimExD->AddressOfNames);
 			DWORD*  pFunction = (DWORD*)(pImageBase + pimExD->AddressOfFunctions);
+			WORD*  pNameOrdinals = (WORD*)(pImageBase + pimExD->AddressOfNameOrdinals);
 
 			wchar_t szSysDirectory[MAX_PATH + 1];
 			GetSystemDirectory(szSysDirectory, MAX_PATH);
@@ -227,7 +228,7 @@ void InstallJMP(PBYTE BaseAddress, MWORD Function)
 				MWORD Original = (MWORD)GetProcAddress(module, (char*)(pImageBase + pName[i]));
 				if (Original)
 				{{
-					InstallJMP(pImageBase + pFunction[i], Original);
+					InstallJMP(pImageBase + pFunction[pNameOrdinals[i]], Original);
 				}}
 			}}
 		}}
