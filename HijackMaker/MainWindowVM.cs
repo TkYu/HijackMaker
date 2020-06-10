@@ -117,7 +117,7 @@ namespace HijackMaker
 
 #define EXTERNC extern ""C""
 
-#define FUNCTION EXTERNC void __cdecl
+#define FUNCTION EXTERNC int __cdecl
 
 #define NOP_FUNC {{ \
 	__nop();\
@@ -132,9 +132,9 @@ namespace HijackMaker
 	__nop();\
 	__nop();\
 	__nop();\
-	__inbyte(__COUNTER__);\
+	return __COUNTER__;\
 }}
-//用__inbyte来生成一点不一样的代码，避免被VS自动合并相同函数
+// 用 __COUNTER__ 来生成一点不一样的代码，避免被 VS 自动合并相同函数
 
 #ifdef _WIN64
 	#define PREFIX ""_""
