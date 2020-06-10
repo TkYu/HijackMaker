@@ -142,13 +142,13 @@ namespace HijackMaker
 	#define PREFIX ""__""
 #endif
 
-#define PRAGMA(api) comment(linker, ""/EXPORT:"" #api ""="" PREFIX #api)
+#define PRAGMA(api, index) comment(linker, ""/EXPORT:"" #api ""="" PREFIX #api "",@"" #index)
 #define EXPORT(api) FUNCTION _##api() NOP_FUNC
 
 
 #pragma region 声明导出函数
 // 声明导出函数
-{string.Join("\n", exports.Select(c => $"#pragma PRAGMA({c})"))}
+{string.Join("\n", exports.Select((c, i) => $"#pragma PRAGMA({c}, {i + 1})"))}
 
 {string.Join("\n", exports.Select(c => $"EXPORT({c})"))}
 #pragma endregion
