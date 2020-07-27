@@ -207,17 +207,14 @@ bool WriteMemory(PBYTE BaseAddress, PBYTE Buffer, DWORD nSize)
     return false;
 }}
 
-// 定义MWORD为机器字长
-#include <stdint.h>
-#ifdef _WIN64
-typedef uint64_t MWORD;
-#else
-typedef uint32_t MWORD;
-#endif
-
 // 还原导出函数
-void InstallJMP(PBYTE BaseAddress, MWORD Function)
+void InstallJMP(PBYTE BaseAddress, uintptr_t Function)
 {{
+    if (*BaseAddress == 0xE9)
+    {{
+        BaseAddress++;
+        BaseAddress = BaseAddress + *(uint32_t*)BaseAddress + 4;
+    }}
 #ifdef _WIN64
     BYTE move[] = {{0x48, 0xB8}};//move rax,xxL);
     BYTE jump[] = {{0xFF, 0xE0}};//jmp rax
@@ -225,8 +222,8 @@ void InstallJMP(PBYTE BaseAddress, MWORD Function)
     WriteMemory(BaseAddress, move, sizeof(move));
     BaseAddress += sizeof(move);
 
-    WriteMemory(BaseAddress, (PBYTE)&Function, sizeof(MWORD));
-    BaseAddress += sizeof(MWORD);
+    WriteMemory(BaseAddress, (PBYTE)&Function, sizeof(uintptr_t));
+    BaseAddress += sizeof(uintptr_t);
 
     WriteMemory(BaseAddress, jump, sizeof(jump));
 #else
@@ -234,7 +231,7 @@ void InstallJMP(PBYTE BaseAddress, MWORD Function)
     WriteMemory(BaseAddress, jump, sizeof(jump));
     BaseAddress += sizeof(jump);
 
-    MWORD offset = Function - (MWORD)BaseAddress - 4;
+    uintptr_t offset = Function - (uintptr_t)BaseAddress - 4;
     WriteMemory(BaseAddress, (PBYTE)&offset, sizeof(offset));
 #endif // _WIN64
 }}
@@ -265,7 +262,7 @@ void InstallJMP(PBYTE BaseAddress, MWORD Function)
             HINSTANCE module = LoadLibrary(szDLLPath);
             for (size_t i = 0; i < pimExD->NumberOfNames; i++)
             {{
-                MWORD Original = (MWORD)GetProcAddress(module, (char*)(pImageBase + pName[i]));
+                uintptr_t Original = (uintptr_t)GetProcAddress(module, (char*)(pImageBase + pName[i]));
                 if (Original)
                 {{
                     InstallJMP(pImageBase + pFunction[pNameOrdinals[i]], Original);
