@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HijackMaker" WindowStartupLocation="CenterScreen"
-        mc:Ignorable="d" FontFamily="Microsoft YaHei UI,微软雅黑" FontSize="12"
+        mc:Ignorable="d" FontFamily="Consolas,Microsoft YaHei UI,微软雅黑" FontSize="12"
         Title="HijackMaker" Height="500" Width="813">
     <Window.DataContext>
         <local:MainWindowVM/>
@@ -32,7 +32,14 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <TextBox Grid.Row="1" Margin="3" Text="{Binding SearchText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Margin="3" VerticalContentAlignment="Center" Text="{Binding SearchText,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Grid.Column="1" IsChecked="{Binding WithIndex,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" VerticalAlignment="Center" >Index</CheckBox>
+            </Grid>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
