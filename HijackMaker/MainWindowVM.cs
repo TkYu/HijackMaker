@@ -51,7 +51,7 @@ namespace HijackMaker
             {
                 _searchText = value;
                 OnPropertyChanged();
-                ListedDlls = string.IsNullOrEmpty(_searchText) ? _winDlls.ToArray() : _winDlls.Where(c => c.Contains(_searchText)).ToArray();
+                ListedDlls = string.IsNullOrEmpty(_searchText) ? _winDlls.ToArray() : _winDlls.Where(c => c.ToLower().Contains(_searchText.ToLower())).ToArray();
             }
         }
 
