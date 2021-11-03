@@ -157,6 +157,7 @@ namespace HijackMaker
 
             TextResult = $@"#include <windows.h>
 #include <intrin.h>
+#include <stdint.h>
 
 namespace hijack
 {{
